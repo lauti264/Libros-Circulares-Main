@@ -1,26 +1,47 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePublisherDto } from './dto/create-publisher.dto';
 import { UpdatePublisherDto } from './dto/update-publisher.dto';
+import { Publisher } from './entities/publisher.entity';
+import { AuthorService } from '../author/author.service';
+import { Author } from '../author/entities/author.entity';
 
 @Injectable()
 export class PublisherService {
+  static publishers: Publisher[] = [];
+  
   create(createPublisherDto: CreatePublisherDto) {
-    return 'This action adds a new publisher';
+    const newPublisher = new Publisher();
+    newPublisher.name = createPublisherDto.name
+    newPublisher.id = Math.random()
+    PublisherService.publishers.push(newPublisher)
+
+    return newPublisher.id
   }
 
   findAll() {
-    return `This action returns all publisher`;
+    return AuthorService.authors;
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} publisher`;
+    const publisher = PublisherService.publishers.find(p =>p.id == id)
+    if(!publisher){
+      throw new NotFoundException()
+    }
+    return publisher
   }
 
   update(id: number, updatePublisherDto: UpdatePublisherDto) {
-    return `This action updates a #${id} publisher`;
+    const publisher = PublisherService.publishers.find(p => p.id == id)
+    if(!publisher){
+      throw new NotFoundException()
+    }
+    if(updatePublisherDto.name){
+      updatePublisherDto.name = publisher.name
+    } 
   }
 
   remove(id: number) {
-    return `This action removes a #${id} publisher`;
+    PublisherService.publishers = PublisherService.publishers.filter((p) => p,id != id) 
+    return true
   }
 }

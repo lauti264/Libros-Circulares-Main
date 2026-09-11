@@ -10,6 +10,7 @@ import { GenreService } from '../genre/genre.service';
   imports: [AuthorModule,GenreModule],
   controllers: [BookController],
   providers: [BookService,AuthorService,GenreService],
+  exports:[BookService]
   
 })
 export class BookModule {}

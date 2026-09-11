@@ -1,19 +1,34 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateEditionDto } from './dto/create-edition.dto';
 import { UpdateEditionDto } from './dto/update-edition.dto';
-
+import { Edition } from './entities/edition.entity';
+import { PublisherService } from '../publisher/publisher.service';
+import { BookService } from '../book/book.service';
 @Injectable()
 export class EditionService {
+  constructor(private readonly publisherService: PublisherService, private readonly bookService: BookService){}
+  static editions: Edition [] = [];
   create(createEditionDto: CreateEditionDto) {
-    return 'This action adds a new edition';
-  }
+  const book = this.bookService.findOne(createEditionDto.bookId)
+  const publisher = this.publisherService.findOne(createEditionDto.publisherId)
+  const newEdition = new Edition()
+  newEdition.year = createEditionDto.year
+  newEdition.id = Math.random()
+  newEdition.book = book
+  newEdition.publisher = publisher
+  EditionService.editions.push(newEdition)
+}
 
   findAll() {
-    return `This action returns all edition`;
+    return EditionService.editions
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} edition`;
+    const edition = EditionService.editions.find(e =>e.id == id)
+      if(!edition){
+        throw new NotFoundException()
+      }
+      return edition
   }
 
   update(id: number, updateEditionDto: UpdateEditionDto) {

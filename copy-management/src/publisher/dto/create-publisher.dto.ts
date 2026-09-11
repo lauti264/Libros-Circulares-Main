@@ -1,1 +1,4 @@
-export class CreatePublisherDto {}
+export class CreatePublisherDto {
+    id : string
+    name: string
+}
