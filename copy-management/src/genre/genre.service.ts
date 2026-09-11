@@ -1,35 +1,44 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateGenreDto } from './dto/create-genre.dto';
 import { UpdateGenreDto } from './dto/update-genre.dto';
 import { Genre } from './entities/genre.entity';
 
 @Injectable()
 export class GenreService {
-  genres: Genre[] = [];
+  static genres: Genre[] = [];
 
   create(createGenreDto: CreateGenreDto) {
     const newGenre = new Genre();
     newGenre.name = createGenreDto.name;
-    newGenre.Id = Math.random();
-    this.genres.push(newGenre);
+    newGenre.id = Math.random();
+    GenreService.genres.push(newGenre);
 
-    return newGenre.Id;
+    return newGenre.id;
   }
 
   findAll() {
-    return this.genres;
+    return GenreService.genres;
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} genre`;
+    const genre = GenreService.genres.find(g=> g.id == id)
+    if(!genre){
+      console.log("dsjfb sdhibvgfdf")
+      throw new NotFoundException()
+    }
+    return genre
   }
 
   update(id: number, updateGenreDto: UpdateGenreDto) {
-    return `This action updates a #${id} genre`;
+    const genre = GenreService.genres.find(g => g.id == id)
+    if(!genre){
+      throw new NotFoundException()
+    }
+    genre.name= updateGenreDto.name
   }
 
   remove(id: number) {
-    this.genres = this.genres.filter((g) => g.Id != id);
+    GenreService.genres = GenreService.genres.filter((g) => g.id != id);
     return true;
   }
 }

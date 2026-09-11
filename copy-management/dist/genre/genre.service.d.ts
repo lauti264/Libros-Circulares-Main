@@ -2,10 +2,10 @@ import { CreateGenreDto } from './dto/create-genre.dto';
 import { UpdateGenreDto } from './dto/update-genre.dto';
 import { Genre } from './entities/genre.entity';
 export declare class GenreService {
-    genres: Genre[];
+    static genres: Genre[];
     create(createGenreDto: CreateGenreDto): number;
     findAll(): Genre[];
-    findOne(id: number): string;
-    update(id: number, updateGenreDto: UpdateGenreDto): string;
+    findOne(id: number): Genre;
+    update(id: number, updateGenreDto: UpdateGenreDto): void;
     remove(id: number): boolean;
 }
